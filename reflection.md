@@ -22,6 +22,7 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
 - I used Claude Code, by adding the Claude code extension on VScode
 
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
+- One example of an AI suggestion that was correct was the messages are swapped in app.py lines 38-40. If the guess is too high, the hint should tell us to go lower. Instead it says go higher and vice versa. I verified this by checking lines 38-40 in app.py, and the hint message is indeed opposite of what it should be. The outcome label (too high, too low)is correct, but the player-facing message is inverted.
 
 
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
