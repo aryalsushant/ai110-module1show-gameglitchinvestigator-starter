@@ -13,6 +13,7 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
   1. I noticed that when the "show hint" button is toggled on, the hint says go lower even when the number I entered is 1, which is the lowest number in the range
   2. The "new game" button does not really work. When I click new game, enter a number and submit, it keeps showing the message "You already won. Start a new game to play again."
   3. I noticed that when I entered 9 and the secret was 11, the hint still told me to go higher. When I entered 12, it told me to go lower. The hint logic is probably random or broken. 1 and 3 could potentially be the same bug, Hence, I will try to find another bug to match the assignment requirement of 3 bugs.
+  4. The secret number changes every time I refresh the game. I first thought this was not a bug, as the secret number was stable in each attempt and only changed in a new attempt of the game. However, the final few questions in this markdown has led me to believe that the secret number is supposed to stay the same.
 
 ---
 
