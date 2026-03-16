@@ -62,5 +62,11 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+
+One habit I learned from this project that I want to re-use in the future is being as specific as possible while prompting and giving constraints to AI. If I prompt without giving constraints, Claude (or any other Ai assistant) will end up doing more work than I asked for. Asking Claude to ask clarifying questions before making changes was also game changer for me.
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+- Next time, I would always manually test every AI suggestion before accepting it, especially when the AI tells me to delete or remove something. In this project, Claude told me to remove an entire block of code, but that block was the only place where the variable `secret` was defined. Removing it caused a NameError that I only caught by actually running the app.
+
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+- Before this project, I assumed AI-generated code was mostly correct and only needed small tweaks. Now I treat it like code from a developer who can code but didn't have full context/understood stakeholder's needs when it initially wrote the code. It's often a good starting point, but I need to read it carefully, test it, and not just trust that it works because it looks right.
