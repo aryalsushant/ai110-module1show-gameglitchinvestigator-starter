@@ -45,8 +45,15 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
 ## 4. What did you learn about Streamlit and state?
 
 - In your own words, explain why the secret number kept changing in the original app.
+  This bug was not actually present in the version I worked with — the guard `if "secret" not in st.session_state:` was already in the starter code. However, if that guard were removed and the line `st.session_state.secret = random.randint(low, high)` ran unconditionally, a new random number would be generated on every Streamlit rerun. Since Streamlit reruns the entire script on every button click or input, the secret would change with every guess, making the game unwinnable.
+
+  I brought this up in the tech-help slack channel, but I was simply told to just list and fix the bugs that I can find. My clarification question after this was not answered.
+
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+  Imagine your entire Python script is a function that gets called fresh every single time you click a button or type something on the page. That's a Streamlit rerun — nothing is remembered between calls unless you explicitly save it. Session state is like a sticky notepad that persists across those reruns. Anything you store in `st.session_state` survives the rerun, so you can remember things like the secret number or how many guesses the player has made.
+
 - What change did you make that finally gave the game a stable secret number?
+  I did not need to fix this — the starter code already had `if "secret" not in st.session_state:` wrapping the secret generation. This guard ensures the secret is only generated once, on first load. Reading this code helped me understand *why* it works: once `"secret"` exists in session state, the condition is false on every subsequent rerun, so the same secret is preserved throughout the game.
 
 ---
 
