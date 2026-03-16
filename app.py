@@ -1,68 +1,8 @@
 import random
 import streamlit as st
-
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
-
-
-def parse_guess(raw: str):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    return True, value, None
-
-
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
-
-    try:
-        if guess > secret:
-            return "Too High", "📈 Go Lower!"
-        else:
-            return "Too Low", "📉 Go Higher!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
-
-
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
-
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
-
-    if outcome == "Too Low":
-        return current_score - 5
-
-    return current_score
+from logic_utils import get_range_for_difficulty, parse_guess, check_guess, update_score
+# Refactored: moved all game logic functions into logic_utils.py using Claude Code Agent mode.
+# This separates UI code (app.py) from game logic (logic_utils.py) and makes the logic testable.
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -134,6 +74,9 @@ with col3:
 if new_game:
     st.session_state.attempts = 0
     st.session_state.secret = random.randint(1, 100)
+    # FIX: Added status and history reset. Original only reset attempts and secret,
+    # leaving status as "won"/"lost", which immediately blocked the new game.
+    # Fixed by also resetting status to "playing" and clearing history.
     st.session_state.status = "playing"
     st.session_state.history = []
     st.success("New game started.")
@@ -157,13 +100,18 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        
-        secret = st.session_state.secret
-        
-        outcome, message = check_guess(guess_int, secret)
+        # FIX: Original cast secret to str on even-numbered attempts, causing string
+        # comparison bugs (e.g. "9" > "50" evaluates True in Python).
+        # Fixed by always using the integer secret directly.
+        outcome = check_guess(guess_int, st.session_state.secret)
 
+        hint_messages = {
+            "Win": "🎉 Correct!",
+            "Too High": "📈 Go Lower!",
+            "Too Low": "📉 Go Higher!",
+        }
         if show_hint:
-            st.warning(message)
+            st.warning(hint_messages[outcome])
 
         st.session_state.score = update_score(
             current_score=st.session_state.score,
