@@ -12,8 +12,7 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
 
   1. I noticed that when the "show hint" button is toggled on, the hint says go lower even when the number I entered is 1, which is the lowest number in the range
   2. The "new game" button does not really work. When I click new game, enter a number and submit, it keeps showing the message "You already won. Start a new game to play again."
-  3. I noticed that when I entered 9 and the secret was 11, the hint still told me to go higher. When I entered 12, it told me to go lower. The hint logic is probably random or broken. 1 and 3 could potentially be the same bug, Hence, I will try to find another bug to match the assignment requirement of 3 bugs.
-  4. The secret number changes every time I refresh the game. I first thought this was not a bug, as the secret number was stable in each attempt and only changed in a new attempt of the game. However, the final few questions in this markdown has led me to believe that the secret number is supposed to stay the same.
+  3. I noticed that when I entered 9 and the secret was 11, the hint still told me to go higher. When I entered 12, it told me to go lower. The hint logic is probably random or broken. 1 and 3 could potentially be the same bug,
 
 ---
 
@@ -32,9 +31,14 @@ It is a simple interface. The game prompted me to guess a number between 1 and 1
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
-- Describe at least one test you ran (manual or using pytest)  
+  I decided a bug was really fixed when I could reproduce the original broken behavior, apply the fix, and then confirm the broken behavior no longer occurred. For the "new game" bug, I manually clicked New Game after winning, submitted a guess, and verified the game actually accepted it instead of immediately showing "You already won." Seeing the game respond normally was my confirmation the fix worked.
+
+- Describe at least one test you ran (manual or using pytest)
   and what it showed you about your code.
+  I added a pytest regression test called `test_new_game_resets_status` in `tests/test_game_logic.py`. The test simulates a session state dict with `status` set to `"won"`, applies the new_game reset logic, and asserts that `status` becomes `"playing"`, `attempts` resets to `0`, and `history` is cleared. Running `pytest` confirmed all assertions passed, which showed me that the reset logic was complete and not missing any fields. Before the fix, the test would have failed because `status` was never updated.
+
 - Did AI help you design or understand any tests? How?
+  Yes — I asked Claude Code to both fix the bug and write a test for it. Claude identified that the root cause was `st.session_state.status` never being reset to `"playing"` in the new_game handler, and then designed a test that simulated the session state as a plain dictionary to verify the reset logic without needing to spin up Streamlit. This helped me understand that you can test Streamlit app logic by isolating the state manipulation into something a unit test can check directly, without needing a real browser or session.
 
 ---
 
